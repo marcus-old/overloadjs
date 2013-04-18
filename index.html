@@ -51,13 +51,12 @@ area(3, 4); // returns 12</pre>
         <p class="lead">Just include the following function in your project to enable function overloading</p>
         <pre class="prettyprint lead">
 function overload(original, matches, fn){
-    if(typeof original != "function" || typeof fn != "function") throw(new Error("Not a valid function"));
     return function(){
         if(matches.length == arguments.length){
             for(var i = 0, type; i < matches.length; i++){
                 if(typeof matches[i] == "string" && typeof arguments[i] != "undefined" && arguments[i] != null){
                     type = (/function (.{1,})\(/).exec(arguments[i].constructor.toString())[1];
-                    if(matches[i] != "*" && matches[i].replace(/ /g, "").split("||").indexOf(type) == -1) break;
+                    if(matches[i] != "*" && ("||"+matches[i].replace(/ /g, "")+"||").split("||"+type+"||").length <= 1) break;
                 } else if(typeof matches[i] == "function"){
                     if(!matches[i](arguments[i])) break;
                 } else break;
@@ -66,6 +65,7 @@ function overload(original, matches, fn){
         }
         return original.apply(this, arguments);
     }
+}
 }</pre>
     </div>
     <div class="module">
