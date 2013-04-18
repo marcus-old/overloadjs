@@ -1,4 +1,4 @@
-[overloadjs](http://marcusaspin.github.io/overloadjs/docs/index.html)
+[overloadjs](http://marcusaspin.github.io/overloadjs)
 ==========
 
 Usage
@@ -31,4 +31,4 @@ area = overload(area, ['Number', 'Number'], function(l, w){
 area(2);    // returns 4*pi
 area(3, 4); // returns 12
 ```
-For more examples, check out the [Demo page](http://marcusaspin.github.io/overloadjs/docs/examples.html)
+For more examples, check out the [Demo page](http://marcusaspin.github.io/overloadjs/examples.html)
