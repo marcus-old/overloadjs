@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Overload.js</title>
+
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet" type="text/css">
+    <link href="assets/style.css" rel="stylesheet" type="text/css">
+    <link href="assets/google-code-prettify/prettify.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div class="container">
+    <div class="module">
+        <div class="clearfix">
+            <h1 class="brand">overload.js</h1>
+            <ul class="nav">
+                <li class="active"><a href="index.html" title="Documentation">Docs</a></li>
+                <li><a href="examples.html" title="Examples">Examples</a></li>
+            </ul>
+        </div>
+        <p>Function overloading or method overloading is a feature found in various programming languages such as Ada, C++, C#, D, and Java, that allows creating several methods with the same name which differ from each other in the type of the input and the output of the function. It is simply defined as the ability of one function to perform different tasks.</p>
+        <p>Javascript has always lacked this ability and though there are many hacks and workarounds for this, none of them provide a clear and concise method for overloading.</p>
+        <p>This function makes it possible to overload your home-made functions as well as <strong>class methods</strong> and even <strong>native functions</strong> in a simple way.</p>
+    </div>
+    <div class="module">
+        <h2>Usage</h2>
+        <p>
+            Functions are overloaded by calling<br>
+            <code>myFunction = overload(myFunction, types, newFunction);</code><br>
+            with the following parameters:<br>
+        </p>
+        <h3>myFunction</h3><p class="lead">&middot; The <em>function</em> to be overloaded.</p>
+        <h3>types</h3><p class="lead">&middot; An <em>array</em> of strings describing the argument types that the function will be overloaded for. The argument types can be of the form <code>"String"</code>, <code>"Array"</code>, <code>"MyClass"</code> etc. or they can each be a list of || separated types (eg. <code>"String || Number"</code>). You can also use <code>"*"</code> as an argument type indicating that anything can be passed to it.<br>
+        <span class="note">note: The array can also contain validating functions that take a single argument and return true if it's valid.</span></p>
+        <h3>newFunction</h3><p class="lead">&middot; The <em>function</em> to be used when arguments of the correct types are passed.</p>
+        Example usage
+        <pre class="prettyprint lead">
+function area(r){
+    return Math.PI*r*r; // area of a circle with radius r
+}
+
+area = overload(area, ['Number', 'Number'], function(l, w){
+    return l*w; // area of a rectangle given length + width
+});
+
+area(2);    // returns 4*pi
+area(3, 4); // returns 12</pre>
+        <p>For more examples, check out the <a href="examples.html" title="examples">Demo page</a></p>
+    </div>
+    <div class="module">
+        <h2>The code</h2>
+        <p class="lead">Just include the following function in your project to enable function overloading</p>
+        <pre class="prettyprint lead">
+function overload(original, matches, fn){
+    if(typeof original != "function" || typeof fn != "function") throw(new Error("Not a valid function"));
+    return function(){
+        if(matches.length == arguments.length){
+            for(var i = 0, type; i < matches.length; i++){
+                if(typeof matches[i] == "string" && typeof arguments[i] != "undefined" && arguments[i] != null){
+                    type = (/function (.{1,})\(/).exec(arguments[i].constructor.toString())[1];
+                    if(matches[i] != "*" && matches[i].replace(/ /g, "").split("||").indexOf(type) == -1) break;
+                } else if(typeof matches[i] == "function"){
+                    if(!matches[i](arguments[i])) break;
+                } else break;
+            }
+            if(i == matches.length) return fn.apply(this, arguments);
+        }
+        return original.apply(this, arguments);
+    }
+}</pre>
+    </div>
+    <div class="module">
+        <h2>Contribute</h2>
+        <p>View the project on <a href="https://github.com/marcusaspin/overloadjs">Github</a>. Feel free to fork or contribute!</p>
+    </div>
+</div>
+
+<script type="text/javascript" src="assets/google-code-prettify/prettify.js"></script>
+<script type="text/javascript">prettyPrint()</script>
+
+<script type="text/javascript" src="overload.js"></script>
+</body>
+</html>
